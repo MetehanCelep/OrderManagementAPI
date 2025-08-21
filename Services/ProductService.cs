@@ -1,6 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Distributed; // Redis için deðiþti
 using OrderManagementAPI.Data;
 using OrderManagementAPI.DTOs;
 using OrderManagementAPI.Models;
@@ -12,7 +12,7 @@ namespace OrderManagementAPI.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IDistributedCache _cache;
+        private readonly IDistributedCache _cache; // Redis için deðiþti
         private readonly ILogger<ProductService> _logger;
         private readonly IConfiguration _configuration;
         private readonly string _cacheKey = "products";

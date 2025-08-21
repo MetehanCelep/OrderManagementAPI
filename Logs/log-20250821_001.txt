@@ -1,0 +1,9 @@
+2025-08-21 20:07:43.323 +03:00 [INF] MailSenderBackgroundService RabbitMQ connection established
+2025-08-21 20:07:43.371 +03:00 [INF] MailSenderBackgroundService started listening for messages
+2025-08-21 20:11:36.583 +03:00 [INF] RabbitMQ connection established
+2025-08-21 20:11:36.622 +03:00 [INF] CreateOrder called for customer: test@example.com
+2025-08-21 20:11:37.051 +03:00 [INF] Message sent to queue SendMail: {"Email":"test@example.com","CustomerName":"Test Kullan\u0131c\u0131","OrderId":5,"TotalAmount":300.00}
+2025-08-21 20:11:37.059 +03:00 [INF] Order created successfully. OrderId: 5
+2025-08-21 20:11:37.067 +03:00 [INF] Received mail request: {"Email":"test@example.com","CustomerName":"Test Kullan\u0131c\u0131","OrderId":5,"TotalAmount":300.00}
+2025-08-21 20:11:39.077 +03:00 [INF] EMAIL SENT - To: test@example.com, Customer: Test Kullanıcı, OrderId: 5, Amount: ₺300,00
+2025-08-21 20:11:39.080 +03:00 [INF] Email sent successfully and message acknowledged

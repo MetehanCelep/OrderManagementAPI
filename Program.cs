@@ -7,12 +7,13 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Serilog configuration - builder oluþturulduktan SONRA
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .CreateLogger();
-
-builder.Host.UseSerilog();
+// Serilog configuration (minimal, güvenli versiyon)
+builder.Host.UseSerilog((context, config) =>
+{
+    config.WriteTo.Console()
+          .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+          .ReadFrom.Configuration(context.Configuration);
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
