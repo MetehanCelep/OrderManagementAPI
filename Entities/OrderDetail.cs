@@ -22,6 +22,7 @@ namespace OrderManagementAPI.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalPrice => UnitPrice * Amount;
 
+        // Navigation properties
         [ForeignKey("OrderId")]
         public virtual Order Order { get; set; }
 
