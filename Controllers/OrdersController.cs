@@ -29,10 +29,12 @@ namespace OrderManagementAPI.Controllers
                         .Select(e => e.ErrorMessage)
                         .ToList();
 
-                    return BadRequest(ApiResponse<int>.Failed($"Validation errors: {string.Join(", ", errors)}", "VALIDATION_ERROR"));
+                    return BadRequest(ApiResponse<int>.Failed(
+                        $"Validation errors: {string.Join(", ", errors)}", 
+                        "VALIDATION_ERROR"));
                 }
 
-                _logger.LogInformation($"CreateOrder called for customer: {request.CustomerEmail}");
+                _logger.LogInformation("CreateOrder called for customer: {Email}", request.CustomerEmail);
 
                 var result = await _orderService.CreateOrderAsync(request);
 
@@ -46,7 +48,7 @@ namespace OrderManagementAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in CreateOrder endpoint");
-                return StatusCode(500, ApiResponse<int>.Failed("Sunucu hatasý", "INTERNAL_ERROR"));
+                return StatusCode(500, ApiResponse<int>.Failed("Sunucu hatasÄ±", "INTERNAL_ERROR"));
             }
         }
     }

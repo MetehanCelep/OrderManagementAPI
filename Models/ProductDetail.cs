@@ -8,11 +8,7 @@ namespace OrderManagementAPI.Models
         public int ProductId { get; set; }
 
         [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Birim fiyat 0'dan büyük olmalıdır")]
-        public decimal UnitPrice { get; set; }
-
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Miktar 1'den büyük olmalıdır")]
+        [Range(1, int.MaxValue, ErrorMessage = "Miktar 1'den bÃ¼yÃ¼k olmalÄ±dÄ±r")]
         public int Amount { get; set; }
     }
 }

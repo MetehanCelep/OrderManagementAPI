@@ -23,7 +23,7 @@ namespace OrderManagementAPI.Controllers
         {
             try
             {
-                _logger.LogInformation($"GetProducts called with category: {category ?? "all"}");
+                _logger.LogInformation("GetProducts called with category: {Category}", category ?? "all");
 
                 var result = await _productService.GetProductsAsync(category);
 
@@ -37,7 +37,7 @@ namespace OrderManagementAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in GetProducts endpoint");
-                return StatusCode(500, ApiResponse<List<ProductDto>>.Failed("Sunucu hatasý", "INTERNAL_ERROR"));
+                return StatusCode(500, ApiResponse<List<ProductDto>>.Failed("Sunucu hatasÄ±", "INTERNAL_ERROR"));
             }
         }
     }

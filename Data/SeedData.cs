@@ -13,7 +13,7 @@ namespace OrderManagementAPI.Data
             }
 
             var random = new Random();
-            var categories = new[] { "Elektronik", "Giyim", "Kitap", "Ev & Yaþam", "Spor", "Oyuncak", "Kozmetik", "Gýda" };
+            var categories = new[] { "Elektronik", "Giyim", "Kitap", "Ev & YaÅŸam", "Spor", "Oyuncak", "Kozmetik", "GÄ±da" };
             var units = new[] { "Adet", "Kg", "Litre", "Metre", "Paket" };
 
             var products = new List<Product>();
@@ -25,13 +25,13 @@ namespace OrderManagementAPI.Data
 
                 products.Add(new Product
                 {
-                    Description = $"{category} Ürünü {i}",
+                    Description = $"{category} ÃœrÃ¼nÃ¼ {i}",
                     Category = category,
                     Unit = unit,
                     UnitPrice = Math.Round((decimal)(random.NextDouble() * 1000 + 10), 2),
-                    Status = random.Next(100) < 95, // %95 aktif ürün
-                    CreateDate = DateTime.Now.AddDays(-random.Next(365)),
-                    UpdateDate = random.Next(2) == 0 ? DateTime.Now.AddDays(-random.Next(30)) : null
+                    Status = random.Next(100) < 95, // %95 aktif Ã¼rÃ¼n
+                    CreateDate = DateTime.UtcNow.AddDays(-random.Next(365)),
+                    UpdateDate = random.Next(2) == 0 ? DateTime.UtcNow.AddDays(-random.Next(30)) : null
                 });
             }
 

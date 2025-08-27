@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using OrderManagementAPI.Data;
 using OrderManagementAPI.Entities;
 using OrderManagementAPI.Models;
-using OrderManagementAPI.Services;
 
 namespace OrderManagementAPI.Services
 {
@@ -26,7 +25,6 @@ namespace OrderManagementAPI.Services
 
             try
             {
-                // Calculate total amount
                 decimal totalAmount = 0;
                 var orderDetails = new List<OrderDetail>();
 
@@ -37,21 +35,21 @@ namespace OrderManagementAPI.Services
 
                     if (product == null)
                     {
-                        return ApiResponse<int>.Failed($"Ürün bulunamadý: {productDetail.ProductId}", "PRODUCT_NOT_FOUND");
+                        return ApiResponse<int>.Failed($"ÃœrÃ¼n bulunamadÄ±: {productDetail.ProductId}", "PRODUCT_NOT_FOUND");
                     }
 
-                    var lineTotal = productDetail.UnitPrice * productDetail.Amount;
+                    var unitPrice = product.UnitPrice; // Fiyat DB'den
+                    var lineTotal = unitPrice * productDetail.Amount;
                     totalAmount += lineTotal;
 
                     orderDetails.Add(new OrderDetail
                     {
                         ProductId = productDetail.ProductId,
-                        UnitPrice = productDetail.UnitPrice,
+                        UnitPrice = unitPrice,
                         Amount = productDetail.Amount
                     });
                 }
 
-                // Create order
                 var order = new Order
                 {
                     CustomerName = request.CustomerName,
@@ -65,7 +63,6 @@ namespace OrderManagementAPI.Services
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
-                // Send email to queue
                 var emailData = new
                 {
                     Email = request.CustomerEmail,
@@ -79,13 +76,13 @@ namespace OrderManagementAPI.Services
                 await transaction.CommitAsync();
 
                 _logger.LogInformation($"Order created successfully. OrderId: {order.Id}");
-                return ApiResponse<int>.Success(order.Id, "Sipariþ baþarýyla oluþturuldu");
+                return ApiResponse<int>.Success(order.Id, "SipariÅŸ baÅŸarÄ±yla oluÅŸturuldu");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error creating order");
-                return ApiResponse<int>.Failed("Sipariþ oluþturulurken hata oluþtu", "ORDER_ERROR");
+                return ApiResponse<int>.Failed("SipariÅŸ oluÅŸturulurken hata oluÅŸtu", "ORDER_ERROR");
             }
         }
     }

@@ -7,7 +7,7 @@ namespace OrderManagementAPI.Models
         public string ErrorCode { get; set; }
         public T Data { get; set; }
 
-        public static ApiResponse<T> Success(T data, string message = "İşlem başarılı")
+        public static ApiResponse<T> Success(T data, string message = "Ä°ÅŸlem baÅŸarÄ±lÄ±.")
         {
             return new ApiResponse<T>
             {

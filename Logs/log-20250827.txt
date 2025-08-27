@@ -1,0 +1,6 @@
+2025-08-27 14:41:43.484 +03:00 [INF] MailSenderBackgroundService RabbitMQ connection established
+2025-08-27 14:41:43.559 +03:00 [INF] MailSenderBackgroundService started listening for messages
+2025-08-27 14:44:44.659 +03:00 [INF] GetProducts called with category: all
+2025-08-27 14:44:45.571 +03:00 [INF] Products loaded from database and cached to Redis. Count: 945
+2025-08-27 14:46:50.417 +03:00 [INF] GetProducts called with category: all
+2025-08-27 14:46:50.455 +03:00 [INF] Products loaded from Redis cache

@@ -6,15 +6,14 @@ namespace OrderManagementAPI.Services
 {
     public class RabbitMqService : IRabbitMqService, IDisposable
     {
-        private readonly IConnection _connection;
-        private readonly IModel _channel;
+        private IConnection? _connection;
         private readonly ILogger<RabbitMqService> _logger;
 
         public RabbitMqService(IConfiguration configuration, ILogger<RabbitMqService> logger)
         {
             _logger = logger;
 
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory
             {
                 HostName = configuration["RabbitMQ:HostName"],
                 Port = configuration.GetValue<int>("RabbitMQ:Port"),
@@ -25,43 +24,55 @@ namespace OrderManagementAPI.Services
             try
             {
                 _connection = factory.CreateConnection();
-                _channel = _connection.CreateModel();
                 _logger.LogInformation("RabbitMQ connection established");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to establish RabbitMQ connection");
-                //throw;
+                _connection = null; // işaretle
             }
         }
 
         public void SendMessage(string queueName, object message)
         {
+            if (_connection == null || !_connection.IsOpen)
+            {
+                throw new InvalidOperationException("RabbitMQ connection is not available.");
+            }
+
             try
             {
-                _channel.QueueDeclare(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                using var channel = _connection.CreateModel(); // channel per call (thread-safe)
+                channel.QueueDeclare(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
 
                 var messageJson = JsonSerializer.Serialize(message);
                 var body = Encoding.UTF8.GetBytes(messageJson);
 
-                var properties = _channel.CreateBasicProperties();
+                var properties = channel.CreateBasicProperties();
                 properties.Persistent = true;
 
-                _channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: properties, body: body);
+                channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: properties, body: body);
 
-                _logger.LogInformation($"Message sent to queue {queueName}: {messageJson}");
+                _logger.LogInformation("Message sent to queue {Queue}: {Payload}", queueName, messageJson);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to send message to queue {queueName}");
+                _logger.LogError(ex, "Failed to send message to queue {Queue}", queueName);
                 throw;
             }
         }
 
         public void Dispose()
         {
-            _channel?.Close();
-            _connection?.Close();
+            try
+            {
+                if (_connection != null)
+                {
+                    if (_connection.IsOpen) _connection.Close();
+                    _connection.Dispose();
+                }
+            }
+            catch { /* swallow dispose errors */ }
         }
     }
 }

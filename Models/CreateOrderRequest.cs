@@ -17,7 +17,7 @@ namespace OrderManagementAPI.Models
         public string CustomerGSM { get; set; }
 
         [Required]
-        [MinLength(1, ErrorMessage = "En az bir ürün seçilmelidir")]
+        [MinLength(1, ErrorMessage = "En az bir Ã¼rÃ¼n seÃ§ilmelidir")]
         public List<ProductDetail> Products { get; set; } = new List<ProductDetail>();
     }
 }
