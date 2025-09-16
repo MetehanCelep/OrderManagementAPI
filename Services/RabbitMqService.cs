@@ -6,7 +6,7 @@ namespace OrderManagementAPI.Services
 {
     public class RabbitMqService : IRabbitMqService, IDisposable
     {
-        private IConnection? _connection;
+        private IConnection _connection;
         private readonly ILogger<RabbitMqService> _logger;
 
         public RabbitMqService(IConfiguration configuration, ILogger<RabbitMqService> logger)
@@ -29,7 +29,7 @@ namespace OrderManagementAPI.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to establish RabbitMQ connection");
-                _connection = null; // işaretle
+                _connection = null;
             }
         }
 
@@ -42,14 +42,20 @@ namespace OrderManagementAPI.Services
 
             try
             {
-                using var channel = _connection.CreateModel(); // channel per call (thread-safe)
+                using var channel = _connection.CreateModel();
                 channel.QueueDeclare(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                //QueueDeclare -> kuyruk yoksa oluştur, varsa kullan
+                //durable:true -> RabbitMQ restart edilse bile kuyruk silinmez
+                //exclusive: false -> farklı connection’lar da kullanabilir
+                //autoDelete: false -> kullanılmadığında otomatik silinmez
 
                 var messageJson = JsonSerializer.Serialize(message);
                 var body = Encoding.UTF8.GetBytes(messageJson);
+                //RabbitMq byte ile çalışır
 
                 var properties = channel.CreateBasicProperties();
                 properties.Persistent = true;
+                //persistent = true -> mesaj disk’e yazılır, RabbitMQ restart edilse bile kaybolmaz.
 
                 channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: properties, body: body);
 

@@ -29,14 +29,20 @@ namespace OrderManagementAPI.Data
                     Category = category,
                     Unit = unit,
                     UnitPrice = Math.Round((decimal)(random.NextDouble() * 1000 + 10), 2),
-                    Status = random.Next(100) < 95, // %95 aktif ürün
+                    Status = random.Next(100) < 95,
                     CreateDate = DateTime.UtcNow.AddDays(-random.Next(365)),
+                    //son 1 yıl içinde random bir CreateDate
                     UpdateDate = random.Next(2) == 0 ? DateTime.UtcNow.AddDays(-random.Next(30)) : null
+                    //Eğer 0 ise → son 30 gün içinde random bir tarih atar.Eğer 1 ise → null bırakır.
+                    //bazı ürünler güncellenmiş, bazıları hiç güncellenmemiş olacak.
                 });
             }
 
             context.Products.AddRange(products);
+            //EF Core’a bu liste içindeki tüm Product objelerini DB’ye eklemeyi hazırla diyo.
+            //Ama henüz DB’ye yazmaz, sadece change tracker içine ekler.
             await context.SaveChangesAsync();
+            //Change Tracker’daki tüm pending değişiklikleri tek seferde DB’ye gönderir.
         }
     }
 }

@@ -38,7 +38,7 @@ namespace OrderManagementAPI.Services
                         return ApiResponse<int>.Failed($"Ürün bulunamadı: {productDetail.ProductId}", "PRODUCT_NOT_FOUND");
                     }
 
-                    var unitPrice = product.UnitPrice; // Fiyat DB'den
+                    var unitPrice = product.UnitPrice;
                     var lineTotal = unitPrice * productDetail.Amount;
                     totalAmount += lineTotal;
 

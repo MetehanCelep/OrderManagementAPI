@@ -47,6 +47,7 @@ namespace OrderManagementAPI.BackgroundServices
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        //ExecuteAsync -> BackgroundService çalışmaya başladığında tetiklenir.
         {
             if (_channel == null)
             {
@@ -55,13 +56,14 @@ namespace OrderManagementAPI.BackgroundServices
             }
 
             var consumer = new EventingBasicConsumer(_channel);
+            //EventingBasicConsumer -> kuyruğu dinlemek için consumer oluşturur.
 
-            consumer.Received += async (model, ea) =>
+            consumer.Received += async (model, ea) => //her mesaj geldiğinde çalışır
             {
                 try
                 {
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
+                    var body = ea.Body.ToArray();//byte alınır
+                    var message = Encoding.UTF8.GetString(body);//toString
 
                     _logger.LogInformation("Received mail request: {Message}", message);
 
@@ -69,13 +71,14 @@ namespace OrderManagementAPI.BackgroundServices
                     await SendEmailAsync(emailData, stoppingToken);
 
                     _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                    //BasicAck -> RabbitMQ’ya mesaj işlendi bilgisi gönderilir. Kuyruktan silinir.
+
                     _logger.LogInformation("Email sent successfully and message acknowledged");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error processing mail message");
 
-                    // Retry limit: 3 kez denedikten sonra requeue etme
                     var redelivered = ea.Redelivered;
                     if (redelivered)
                     {

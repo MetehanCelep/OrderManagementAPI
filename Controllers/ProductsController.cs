@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;//Controller ve Action altyapısı için
 using OrderManagementAPI.DTOs;
 using OrderManagementAPI.Models;
 using OrderManagementAPI.Services;
@@ -19,7 +19,10 @@ namespace OrderManagementAPI.Controllers
         }
 
         [HttpGet]
+
         public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetProducts([FromQuery] string category = null)
+        //[FromQuery] ile query string’deki category parametresini otomatik alır
+        //ActionResult<T> = Hem veriyi hem de HTTP status code’u dönebilmek için
         {
             try
             {
@@ -29,10 +32,10 @@ namespace OrderManagementAPI.Controllers
 
                 if (result.Status == Status.Success)
                 {
-                    return Ok(result);
+                    return Ok(result);//200
                 }
 
-                return BadRequest(result);
+                return BadRequest(result);//400
             }
             catch (Exception ex)
             {

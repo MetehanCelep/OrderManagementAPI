@@ -7,7 +7,6 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Serilog configuration (minimal, g�venli versiyon)
 builder.Host.UseSerilog((context, config) =>
 {
     config.WriteTo.Console()
@@ -29,7 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Redis Cache
-builder.Services.AddStackExchangeRedisCache(options =>
+builder.Services.AddStackExchangeRedisCache(options => //AddStackExchangeRedisCache, Microsoft'un Redis integration paketi
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
 });
@@ -58,9 +57,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+app.UseHttpsRedirection();//HTTP->HTTPS
+app.UseAuthorization();//[Authorize] attribute için gerekli.
+app.MapControllers();//Controller endpointlerini aktif etmek için
 
 Console.WriteLine("Starting application...");
 app.Run();

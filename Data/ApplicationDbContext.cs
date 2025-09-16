@@ -3,7 +3,7 @@ using OrderManagementAPI.Entities;
 
 namespace OrderManagementAPI.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext //DbContext: EF Core'un ana sınıfı
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

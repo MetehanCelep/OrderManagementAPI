@@ -19,6 +19,8 @@ namespace OrderManagementAPI.Controllers
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<int>>> CreateOrder([FromBody] CreateOrderRequest request)
+        //[FromBody]Request body JSON’dan otomatik CreateOrderRequest modeline bind edilir.
+        //Model binding: HTTP isteğinden gelen verinin otomatik olarak C# sınıfına dönüştürülmesidir.
         {
             try
             {
@@ -28,9 +30,8 @@ namespace OrderManagementAPI.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage)
                         .ToList();
-
-                    return BadRequest(ApiResponse<int>.Failed(
-                        $"Validation errors: {string.Join(", ", errors)}", 
+                    return BadRequest(ApiResponse<int>.Failed(//400
+                        $"Validation errors: {string.Join(", ", errors)}",
                         "VALIDATION_ERROR"));
                 }
 

@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;//property’lere validation ve DB kuralları eklememizi sağlar.
+using System.ComponentModel.DataAnnotations.Schema;//DB kolon tipini belirtmemizi sağlar
 
 namespace OrderManagementAPI.Entities
 {
@@ -27,8 +27,10 @@ namespace OrderManagementAPI.Entities
 
         public DateTime CreateDate { get; set; }
 
-        public DateTime? UpdateDate { get; set; }
-
+        public DateTime? UpdateDate { get; set; }//Nullable
+        //Buna required koymamamıza rağmen nullable olmaz çünkü bu bi value type(struct) olduğu için otomatik null olamaz.
+    
         public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        //virtual EF Core’da lazy loading için kullanılır.
     }
 }
